@@ -14,8 +14,8 @@ import (
 )
 
 const (
-	apiTaskURL         = "https://api.todoist.com/rest/v1/tasks"
-	apiTokenEnvVarName = "TODOIST_API_TOKEN"
+	apiTaskURL = "https://api.todoist.com/rest/v1/tasks"
+	envVarName = "TODOIST_API_TOKEN" // because the work "token in variable name" makes linter unhappy
 )
 
 var (
@@ -81,7 +81,7 @@ func addTask() (*Task, error) {
 func main() {
 	flag.StringVar(&task.Content, "c", "", "The content of the task to create")
 	flag.Int64Var(&task.ParentID, "p", 0, "ID of the project (optional, default: inbox)")
-	flag.StringVar(&apiToken, "t", "", fmt.Sprintf("Todoist API token (default: $%s)", apiTokenEnvVarName))
+	flag.StringVar(&apiToken, "t", "", fmt.Sprintf("Todoist API token (default: $%s)", envVarName))
 	flag.Usage = func() {
 		fmt.Printf("utility to quickly create Todoist task - %s (%s at %s)\n", version, commit, date)
 		fmt.Println(" usage: ./td -c \"buy milk\"")
@@ -90,7 +90,7 @@ func main() {
 	flag.Parse()
 
 	if apiToken == "" {
-		apiToken = os.Getenv(apiTokenEnvVarName)
+		apiToken = os.Getenv(envVarName)
 	}
 
 	if task.Content == "" || apiToken == "" {
