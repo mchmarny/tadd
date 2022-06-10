@@ -1,9 +1,7 @@
 package todoist
 
 import (
-	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -23,44 +21,30 @@ type Task struct {
 	Completed    *bool      `json:"completed,omitempty"`
 	Order        *int64     `json:"order,omitempty"`
 	Priority     *int64     `json:"priority,omitempty"`
-	Labels       []int      `json:"label_ids,omitempty"`
+	Labels       []int64    `json:"label_ids,omitempty"`
 	SectionID    *int64     `json:"section_id,omitempty"`
 	ParentID     *int64     `json:"parent_id,omitempty"`
 	Creator      *int64     `json:"creator,omitempty"`
 	Created      *time.Time `json:"created,omitempty"`
 	URL          *string    `json:"url,omitempty"`
+	Due          *Due       `json:"due,omitempty"`
+}
+
+type Due struct {
+	Date      *string `json:"date"`
+	String    *string `json:"string"`
+	Recurring bool    `json:"recurring"`
 }
 
 func AddTask(apiToken, content string) (*Task, error) {
-	if apiToken == "" {
-		return nil, errors.New("missing required argument: apiToken")
-	}
-
-	if content == "" {
-		return nil, errors.New("missing required argument: content")
-	}
-
-	task := &Task{
-		Content: content,
-	}
-
-	b, err := json.Marshal(task)
+	task, err := parseTask(apiToken, content)
 	if err != nil {
-		return nil, fmt.Errorf("error marshaling task: %s", err)
+		return nil, fmt.Errorf("error parsing task: %v", err)
 	}
 
-	req, err := http.NewRequest(http.MethodPost, apiTaskURL, bytes.NewBuffer(b))
+	resp, err := exec(http.MethodPost, apiTaskURL, apiToken, task)
 	if err != nil {
-		return nil, fmt.Errorf("error creating request: %s", err)
-	}
-
-	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", apiToken))
-
-	c := &http.Client{}
-	resp, err := c.Do(req)
-	if err != nil {
-		return nil, fmt.Errorf("error posting request: %s", err)
+		return nil, fmt.Errorf("error posting task create request: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -71,7 +55,7 @@ func AddTask(apiToken, content string) (*Task, error) {
 
 	var t Task
 	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
-		return nil, fmt.Errorf("error decoding response: %s", err)
+		return nil, fmt.Errorf("error decoding response: %v", err)
 	}
 
 	return &t, nil

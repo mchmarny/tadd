@@ -46,5 +46,6 @@ func main() {
 		fmt.Printf("error adding task: %s", err)
 		os.Exit(1)
 	}
-	fmt.Printf("task created: %d\n", t.ID)
+
+	fmt.Println(t.URL)
 }

@@ -38,7 +38,7 @@ cli: tidy ## Builds CLI binary
 		-X 'main.commit=$(RELEASE_COMMIT)' \
 		-X 'main.date=$(RELEASE_DATE)' " \
 		-o bin/$(CLI_NAME) \
-		cmd/$(CLI_NAME)/.
+		cmd/$(CLI_NAME)/*.go
 .PHONY: cli
 
 dist: test lint ## Runs test, lint before building distributables
