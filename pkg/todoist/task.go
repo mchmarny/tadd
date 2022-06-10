@@ -46,7 +46,7 @@ func AddTask(apiToken, content string) (*Task, error) {
 
 	b, err := json.Marshal(task)
 	if err != nil {
-		return nil, fmt.Errorf("error marshalling task: %s", err)
+		return nil, fmt.Errorf("error marshaling task: %s", err)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, apiTaskURL, bytes.NewBuffer(b))
