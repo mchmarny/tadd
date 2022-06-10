@@ -21,7 +21,7 @@ type Item struct {
 
 func getItemID(url, token, name string) (*int64, error) {
 	if url == "" {
-		return nil, errors.New("url is empty")
+		return nil, errors.New("missing required argument: url")
 	}
 
 	if token == "" {
@@ -34,7 +34,7 @@ func getItemID(url, token, name string) (*int64, error) {
 
 	resp, err := exec(http.MethodGet, url, token, nil)
 	if err != nil {
-		return nil, fmt.Errorf("error posting get projects request: %v", err)
+		return nil, fmt.Errorf("failed to post get projects request: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -45,7 +45,7 @@ func getItemID(url, token, name string) (*int64, error) {
 
 	var items []Item
 	if err := json.NewDecoder(resp.Body).Decode(&items); err != nil {
-		return nil, fmt.Errorf("error decoding response: %v", err)
+		return nil, fmt.Errorf("unable to decode response: %v", err)
 	}
 
 	for _, item := range items {

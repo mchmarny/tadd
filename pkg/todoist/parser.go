@@ -2,7 +2,9 @@ package todoist
 
 import (
 	"errors"
+	"fmt"
 	"regexp"
+	"strconv"
 	"strings"
 )
 
@@ -21,6 +23,10 @@ func parseTask(apiToken, content string) (*Task, error) {
 	replace := make([]string, 0)
 
 	for _, part := range parts {
+		if len(part) <= 1 {
+			continue
+		}
+
 		prefix := part[:1]
 		switch prefix {
 		case "#":
@@ -56,6 +62,16 @@ func parseTask(apiToken, content string) (*Task, error) {
 			} else {
 				t.DueString = &d
 			}
+		case "*":
+			i, err := strconv.Atoi(part[1:])
+			if err != nil {
+				return nil, fmt.Errorf("invalid priority: %s", part[1:])
+			}
+			if i < 1 || i > 4 {
+				return nil, fmt.Errorf("priority must be 1-4, got: %d", i)
+			}
+			replace = append(replace, part)
+			t.Priority = &i
 		}
 	}
 

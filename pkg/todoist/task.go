@@ -10,7 +10,6 @@ import (
 
 const (
 	apiTaskCreateURL = "https://api.todoist.com/rest/v1/tasks"
-	apiTaskGetURL    = "https://api.todoist.com/rest/v1/tasks/%d"
 )
 
 type Task struct {
@@ -21,7 +20,7 @@ type Task struct {
 	CommentCount *int64     `json:"comment_count,omitempty"`
 	Completed    *bool      `json:"completed,omitempty"`
 	Order        *int64     `json:"order,omitempty"`
-	Priority     *int64     `json:"priority,omitempty"`
+	Priority     *int       `json:"priority,omitempty"`
 	Labels       []int64    `json:"label_ids,omitempty"`
 	SectionID    *int64     `json:"section_id,omitempty"`
 	ParentID     *int64     `json:"parent_id,omitempty"`
@@ -35,12 +34,12 @@ type Task struct {
 func AddTask(apiToken, content string) (*Task, error) {
 	task, err := parseTask(apiToken, content)
 	if err != nil {
-		return nil, fmt.Errorf("error parsing task: %v", err)
+		return nil, fmt.Errorf("failed to parse task: %v", err)
 	}
 
 	resp, err := exec(http.MethodPost, apiTaskCreateURL, apiToken, task)
 	if err != nil {
-		return nil, fmt.Errorf("error posting task create request: %v", err)
+		return nil, fmt.Errorf("failed to post create task request: %v", err)
 	}
 	defer resp.Body.Close()
 
@@ -51,28 +50,7 @@ func AddTask(apiToken, content string) (*Task, error) {
 
 	var t Task
 	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
-		return nil, fmt.Errorf("error decoding response: %v", err)
-	}
-
-	return &t, nil
-}
-
-func GetTask(apiToken string, id int64) (*Task, error) {
-	getTaskURL := fmt.Sprintf(apiTaskGetURL, id)
-	resp, err := exec(http.MethodGet, getTaskURL, apiToken, nil)
-	if err != nil {
-		return nil, fmt.Errorf("error posting task create request: %v", err)
-	}
-	defer resp.Body.Close()
-
-	if resp.StatusCode != http.StatusOK {
-		body, _ := ioutil.ReadAll(resp.Body)
-		return nil, fmt.Errorf("failed to add task: %s - %s", resp.Status, string(body))
-	}
-
-	var t Task
-	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
-		return nil, fmt.Errorf("error decoding response: %v", err)
+		return nil, fmt.Errorf("unable to decode response: %v", err)
 	}
 
 	return &t, nil
