@@ -28,7 +28,7 @@ builds:
 release:
   github:
     owner: mchmarny
-    name: "{{.ProjectName}}"
+    name: tadd
   prerelease: auto
 
 archives:
@@ -53,18 +53,17 @@ changelog:
 
 brews:
   -
-    goarm: 7
     tap:
       owner: mchmarny
-      name: "homebrew-{{.ProjectName}}"
+      name: "homebrew-{{ .ProjectName }}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
-    url_template: "https://github.com/mchmarny/{{.ProjectName}}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    url_template: "https://github.com/mchmarny/{{ .ProjectName }}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     commit_author:
       name: github-actions
       email: github-actions@github.com
     commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
     folder: Formula
-    homepage: "https://github.com/mchmarny/{{.ProjectName}}"
+    homepage: "https://github.com/mchmarny/{{ .ProjectName }}"
     description: "Single binary, no dependency, utility to quickly create Todoist task."
     license: "Apache-2.0"
   
