@@ -5,7 +5,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/mchmarny/quickadd/pkg/todoist"
+	"github.com/mchmarny/tadd/pkg/todoist"
 )
 
 const (
@@ -26,7 +26,7 @@ func main() {
 	flag.StringVar(&apiToken, "t", "", fmt.Sprintf("Todoist API token (default: $%s)", envVarName))
 	flag.Usage = func() {
 		fmt.Printf("utility to quickly create Todoist task - %s (%s at %s)\n", version, commit, date)
-		fmt.Println(" usage: ./td -c \"buy milk\"")
+		fmt.Println(" usage: tadd -c \"buy milk\"")
 		flag.PrintDefaults()
 	}
 	flag.Parse()

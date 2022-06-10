@@ -3,12 +3,11 @@ package todoist
 import (
 	"bytes"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"io/ioutil"
 	"net/http"
 	"time"
-
-	"github.com/pkg/errors"
 )
 
 const (
@@ -47,12 +46,12 @@ func AddTask(apiToken, content string) (*Task, error) {
 
 	b, err := json.Marshal(task)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to marshal task")
+		return nil, fmt.Errorf("error marshalling task: %s", err)
 	}
 
 	req, err := http.NewRequest(http.MethodPost, apiTaskURL, bytes.NewBuffer(b))
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to create request")
+		return nil, fmt.Errorf("error creating request: %s", err)
 	}
 
 	req.Header.Set("Content-Type", "application/json")
@@ -61,18 +60,18 @@ func AddTask(apiToken, content string) (*Task, error) {
 	c := &http.Client{}
 	resp, err := c.Do(req)
 	if err != nil {
-		return nil, errors.Wrapf(err, "failed to send request")
+		return nil, fmt.Errorf("error posting request: %s", err)
 	}
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
 		body, _ := ioutil.ReadAll(resp.Body)
-		return nil, errors.Errorf("failed to add task: %s - %s", resp.Status, string(body))
+		return nil, fmt.Errorf("failed to add task: %s - %s", resp.Status, string(body))
 	}
 
 	var t Task
 	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
-		return nil, errors.Wrapf(err, "failed to decode response")
+		return nil, fmt.Errorf("error decoding response: %s", err)
 	}
 
 	return &t, nil

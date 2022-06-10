@@ -1,5 +1,3 @@
-module github.com/mchmarny/quickadd
+module github.com/mchmarny/tadd
 
 go 1.18
-
-require github.com/pkg/errors v0.9.1

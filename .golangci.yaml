@@ -80,7 +80,7 @@ issues:
     # - G101
 
   # exclude-rules:
-  #   - path: cmd/td/oauth.go
+  #   - path: cmd/tadd/oauth.go
   #     linters:
   #       - some-linter
 

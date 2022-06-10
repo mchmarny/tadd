@@ -1,3 +1,4 @@
+CLI_NAME        ?=tadd
 RELEASE_VERSION ?=$(shell cat ./version)
 RELEASE_COMMIT  ?=$(shell git rev-parse --short HEAD)
 RELEASE_DATE    ?=$(shell date +%Y-%m-%dT%H:%M:%S%Z)
@@ -36,8 +37,8 @@ cli: tidy ## Builds CLI binary
 		-X 'main.version=$(RELEASE_VERSION)' \
 		-X 'main.commit=$(RELEASE_COMMIT)' \
 		-X 'main.date=$(RELEASE_DATE)' " \
-		-o bin/td \
-		cmd/td/*.go
+		-o bin/$(CLI_NAME) \
+		cmd/$(CLI_NAME)/.
 .PHONY: cli
 
 dist: test lint ## Runs test, lint before building distributables
