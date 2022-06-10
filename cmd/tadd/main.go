@@ -47,5 +47,5 @@ func main() {
 		os.Exit(1)
 	}
 
-	fmt.Println(t.URL)
+	fmt.Printf("Task added: %s\n", *t.URL)
 }

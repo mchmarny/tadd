@@ -18,7 +18,7 @@ func exec(method, url, apiToken string, content interface{}) (*http.Response, er
 		}
 		body = bytes.NewBuffer(b)
 
-		fmt.Printf("%s %s\n%s\n", method, url, string(b))
+		// fmt.Printf("%s %s\n%s\n", method, url, string(b))
 	}
 
 	req, err := http.NewRequest(method, url, body)
