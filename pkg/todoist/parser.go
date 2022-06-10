@@ -31,21 +31,30 @@ func parseTask(apiToken, content string) (*Task, error) {
 			t.ProjectID = id
 			replace = append(replace, part)
 		case "@":
+			// get existing label id
 			id, err := getItemID(apiLabelURL, apiToken, part[1:])
 			if err != nil {
 				return nil, err
 			}
+
+			// if label doesn't exist, create it
+			if id == nil {
+				id, err = createItem(apiLabelURL, apiToken, part[1:])
+				if err != nil {
+					return nil, err
+				}
+			}
+
 			t.Labels = append(t.Labels, *id)
 			replace = append(replace, part)
 		case "^":
-			t.Due = &Due{}
 			d := part[1:]
 			replace = append(replace, part)
 			pattern := regexp.MustCompile(`\d{4}-\d{2}-\d{2}`)
 			if pattern.MatchString(part[1:]) {
-				t.Due.Date = &d
+				t.DueDate = &d
 			} else {
-				t.Due.String = &d
+				t.DueString = &d
 			}
 		}
 	}

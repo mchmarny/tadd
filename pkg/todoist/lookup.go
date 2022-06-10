@@ -15,7 +15,7 @@ const (
 )
 
 type Item struct {
-	ID   int64  `json:"id,omitempty"`
+	ID   *int64 `json:"id,omitempty"`
 	Name string `json:"name,omitempty"`
 }
 
@@ -50,9 +50,41 @@ func getItemID(url, token, name string) (*int64, error) {
 
 	for _, item := range items {
 		if strings.EqualFold(item.Name, name) {
-			return &item.ID, nil
+			return item.ID, nil
 		}
 	}
 
 	return nil, nil
+}
+
+func createItem(url, token, name string) (*int64, error) {
+	if url == "" {
+		return nil, errors.New("url is empty")
+	}
+
+	if token == "" {
+		return nil, errors.New("missing required argument: token")
+	}
+
+	if name == "" {
+		return nil, errors.New("missing required argument: projectName")
+	}
+
+	resp, err := exec(http.MethodPost, url, token, &Item{Name: name})
+	if err != nil {
+		return nil, fmt.Errorf("error posting get projects request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("failed to get projects: %s - %s", resp.Status, string(body))
+	}
+
+	var item Item
+	if err := json.NewDecoder(resp.Body).Decode(&item); err != nil {
+		return nil, fmt.Errorf("error decoding response: %v", err)
+	}
+
+	return item.ID, nil
 }

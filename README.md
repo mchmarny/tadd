@@ -21,16 +21,22 @@ Download and install the latest `tadd.alfredworkflow` workflow from [here](https
 
 ## usage 
 
-In terminal:
+### terminal
 
 ```shell
-tadd -c "buy milk"
+tadd -c "buy milk ^monday #personal @shopping"
 ```
 
 > By default, `tadd` will use $TODOIST_API_TOKEN env variable to acquire your Todoist API token. If you'd rather pass it manually you will also need to include the `-t` flag with your token. 
 
+The above command will result in a task `buy milk` due on `monday` with a label `shopping` in project `personal`. Few things to note on the format of your content:
 
-Or in [Alfred](https://www.alfredapp.com/):
+* Projects default to `inbox` if don't exist (prefixed with `#`) or not specified
+* Labels (prefixed with `@`) will be created if don't exist
+* Due dates (prefixed with `^`) can be relative (e.g. `^tomorrow`) or absolute (e.g. `^2022-06-10`)
+
+
+### alfred
 
 ![](doc/img/alfred.png)
 

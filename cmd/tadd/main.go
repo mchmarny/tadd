@@ -4,6 +4,7 @@ import (
 	"flag"
 	"fmt"
 	"os"
+	"time"
 
 	"github.com/mchmarny/tadd/pkg/todoist"
 )
@@ -25,8 +26,18 @@ func main() {
 	flag.StringVar(&content, "c", "", "The content of the task to create")
 	flag.StringVar(&apiToken, "t", "", fmt.Sprintf("Todoist API token (default: $%s)", envVarName))
 	flag.Usage = func() {
-		fmt.Printf("utility to quickly create Todoist task - %s (%s at %s)\n", version, commit, date)
-		fmt.Println(" usage: tadd -c \"buy milk\"")
+		fmt.Println()
+		fmt.Printf("tadd - Utility to quickly create Todoist task - %s (%s at %s)\n", version, commit, date)
+		fmt.Println()
+		fmt.Println(" Usage: tadd -c \"buy milk ^monday #personal @shopping\"")
+		fmt.Println(" Result: task 'buy milk' due on 'monday' with a label 'shopping' in project 'personal'")
+		fmt.Println()
+		fmt.Println(" Note: ")
+		fmt.Println("    projects default to 'inbox' if don't exist or not specified")
+		fmt.Println("    labels (prefix:@) will be created if don't exist")
+		fmt.Printf("    due dates (prefix:^) can be relative (e.g. ^tomorrow) or absolute (e.g. ^%s)\n", time.Now().Format("2006-01-02"))
+		fmt.Println()
+		fmt.Println(" Arguments:")
 		flag.PrintDefaults()
 	}
 	flag.Parse()
@@ -35,17 +46,17 @@ func main() {
 		apiToken = os.Getenv(envVarName)
 	}
 
-	if content == "" || apiToken == "" {
-		fmt.Println("missing required arguments")
+	if apiToken == "" || content == "" {
+		fmt.Println("missing arguments")
 		flag.Usage()
 		os.Exit(1)
 	}
 
 	t, err := todoist.AddTask(apiToken, content)
 	if err != nil {
-		fmt.Printf("error adding task: %s", err)
+		fmt.Printf("error: %s", err)
 		os.Exit(1)
 	}
 
-	fmt.Printf("Task added: %s\n", *t.URL)
+	fmt.Println(*t.URL)
 }

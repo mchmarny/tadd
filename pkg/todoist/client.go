@@ -17,7 +17,6 @@ func exec(method, url, apiToken string, content interface{}) (*http.Response, er
 			return nil, fmt.Errorf("error marshaling content: %v", err)
 		}
 		body = bytes.NewBuffer(b)
-
 		// fmt.Printf("%s %s\n%s\n", method, url, string(b))
 	}
 

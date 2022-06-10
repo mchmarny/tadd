@@ -42,6 +42,7 @@ snapshot:
   name_template: "{{.Tag}}-next"
 
 changelog:
+  use: github
   sort: asc
   filters:
     exclude:
@@ -49,7 +50,6 @@ changelog:
       - "^test:"
       - readme
       - typo
-
 
 brews:
   -

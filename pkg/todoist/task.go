@@ -9,7 +9,8 @@ import (
 )
 
 const (
-	apiTaskURL = "https://api.todoist.com/rest/v1/tasks"
+	apiTaskCreateURL = "https://api.todoist.com/rest/v1/tasks"
+	apiTaskGetURL    = "https://api.todoist.com/rest/v1/tasks/%d"
 )
 
 type Task struct {
@@ -27,13 +28,8 @@ type Task struct {
 	Creator      *int64     `json:"creator,omitempty"`
 	Created      *time.Time `json:"created,omitempty"`
 	URL          *string    `json:"url,omitempty"`
-	Due          *Due       `json:"due,omitempty"`
-}
-
-type Due struct {
-	Date      *string `json:"date"`
-	String    *string `json:"string"`
-	Recurring bool    `json:"recurring"`
+	DueDate      *string    `json:"due_date,omitempty"`
+	DueString    *string    `json:"due_string,omitempty"`
 }
 
 func AddTask(apiToken, content string) (*Task, error) {
@@ -42,7 +38,28 @@ func AddTask(apiToken, content string) (*Task, error) {
 		return nil, fmt.Errorf("error parsing task: %v", err)
 	}
 
-	resp, err := exec(http.MethodPost, apiTaskURL, apiToken, task)
+	resp, err := exec(http.MethodPost, apiTaskCreateURL, apiToken, task)
+	if err != nil {
+		return nil, fmt.Errorf("error posting task create request: %v", err)
+	}
+	defer resp.Body.Close()
+
+	if resp.StatusCode != http.StatusOK {
+		body, _ := ioutil.ReadAll(resp.Body)
+		return nil, fmt.Errorf("failed to add task: %s - %s", resp.Status, string(body))
+	}
+
+	var t Task
+	if err := json.NewDecoder(resp.Body).Decode(&t); err != nil {
+		return nil, fmt.Errorf("error decoding response: %v", err)
+	}
+
+	return &t, nil
+}
+
+func GetTask(apiToken string, id int64) (*Task, error) {
+	getTaskURL := fmt.Sprintf(apiTaskGetURL, id)
+	resp, err := exec(http.MethodGet, getTaskURL, apiToken, nil)
 	if err != nil {
 		return nil, fmt.Errorf("error posting task create request: %v", err)
 	}
