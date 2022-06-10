@@ -1,11 +1,17 @@
 # td
 
-Utility to quickly create [Todoist](https://todoist.com/app/today) task. Todoist has a quick add utility but if you are user of productivity apps like [Alfred](https://www.alfredapp.com/) on Mac you need even quicker way of collecting tasks without switching context using already familiar shortcut. 
+Single binary, no dependency, utility to quickly create [Todoist](https://todoist.com/app/today) task. 
+
+Todoist has a quick add app, but if you already are a user of productivity apps like [Alfred](https://www.alfredapp.com/) on Mac, or just prefer a quicker way of collecting tasks right from the command-line without switching context, `td` is for you.
+
+## install 
+
+
 
 ## usage 
 
 ```shell
-./td -c "buy milk"
+td -c "buy milk"
 ```
 
 ### options

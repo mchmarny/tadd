@@ -6,7 +6,7 @@ before:
 
 builds:
   - binary: "{{.ProjectName}}"
-    dir: ./
+    dir: ./cmd/td
     env:
       - CGO_ENABLED=0
     flags:
@@ -50,3 +50,21 @@ changelog:
       - readme
       - typo
 
+
+brews:
+  -
+    goarm: 7
+    tap:
+      owner: mchmarny
+      name: homebrew-td
+      token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
+    url_template: "https://github.com/mchmarny/td/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
+    commit_author:
+      name: github-actions
+      email: github-actions@github.com
+    commit_msg_template: "Brew formula update for {{ .ProjectName }} version {{ .Tag }}"
+    folder: Formula
+    homepage: "https://github.com/mchmarny/td"
+    description: "Single binary, no dependency, utility to quickly create Todoist task."
+    license: "Apache-2.0"
+  

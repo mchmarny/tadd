@@ -23,10 +23,6 @@ test: tidy ## Runs unit tests
 		go test -count=1 -race -covermode=atomic -coverprofile=cover.out ./...
 .PHONY: test
 
-run: tidy ## Runs uncompiled version of the app
-	go run *.go
-.PHONY: run
-
 cover: test ## Runs unit tests and putputs coverage
 	go tool cover -func=cover.out
 .PHONY: cover
@@ -41,17 +37,12 @@ cli: tidy ## Builds CLI binary
 		-X 'main.commit=$(RELEASE_COMMIT)' \
 		-X 'main.date=$(RELEASE_DATE)' " \
 		-o bin/td \
-		*.go
+		cmd/td/*.go
 .PHONY: cli
 
 dist: test lint ## Runs test, lint before building distributables
 	goreleaser release --snapshot --rm-dist --timeout 10m0s
 .PHONY: dist
-
-local: ## Copies latest binary to local bin directory
-	sudo cp bin/td /usr/local/bin/td
-	sudo chmod 755 /usr/local/bin/td
-.PHONY: local
 
 tag: ## Creates release tag 
 	git tag $(RELEASE_VERSION)
