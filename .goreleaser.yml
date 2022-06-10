@@ -28,7 +28,7 @@ builds:
 release:
   github:
     owner: mchmarny
-    name: td
+    name: "{{.ProjectName}}"
   prerelease: auto
 
 archives:
