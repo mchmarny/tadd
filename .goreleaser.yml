@@ -6,7 +6,7 @@ before:
 
 builds:
   - binary: "{{.ProjectName}}"
-    dir: ./cmd/{{.ProjectName}}
+    dir: ./cmd/tadd
     env:
       - CGO_ENABLED=0
     flags:
@@ -56,7 +56,7 @@ brews:
     goarm: 7
     tap:
       owner: mchmarny
-      name: homebrew-{{.ProjectName}}
+      name: "homebrew-{{.ProjectName}}"
       token: "{{ .Env.HOMEBREW_TAP_GITHUB_TOKEN }}"
     url_template: "https://github.com/mchmarny/{{.ProjectName}}/releases/download/{{ .Tag }}/{{ .ArtifactName }}"
     commit_author:
