@@ -13,7 +13,7 @@ brew tap mchmarny/tadd
 brew install tadd
 ```
 
-All new release will be automatically picked up with `brew upgrade`
+All new release will be automatically picked up with `brew upgrade`.
 
 ### using Alfred
 
