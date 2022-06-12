@@ -2,7 +2,7 @@
 
 Single binary, no dependency, utility to quickly create [Todoist](https://todoist.com/app/today) task. 
 
-> Todoist has a quick add app, but if you already are a user of productivity apps like [Alfred](https://www.alfredapp.com/) on Mac, or just prefer a quicker way of collecting tasks right from the terminal without switching context, `tadd` is for you.
+> Todoist has a quick-add app, but if you already are a user of productivity apps like [Alfred](https://www.alfredapp.com/) on Mac, or just prefer a quicker way of collecting tasks right from the terminal without switching context, `tadd` is for you.
 
 ## install 
 
